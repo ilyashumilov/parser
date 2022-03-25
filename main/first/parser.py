@@ -19,7 +19,6 @@ class parser:
     def __str__(self):
         return str(self.query)
 
-
     # def __init__(self):
         # self.session = requests.Session()
         # self.session.headers = {
@@ -50,16 +49,18 @@ class parser:
 
     def last_page(self):
         text = self.page(page=2)
-        print(text)
+        # print(text)
         soup = bs4.BeautifulSoup(text,'lxml')
         pages = soup.select('span.pagination-item-JJq_j')
-        print(pages)
+        # print(pages)
 
         return(pages[-2].string)
 
     def block(self):
-        for i in range(int(self.last_page())+1):
-            text = self.page(page=2)
+        result = None
+        # for i in range(int(self.last_page())+1):
+        for i in range(2):
+            text = self.page(page=i)
             soup=bs4.BeautifulSoup(text,'lxml')
             part = soup.select('div.iva-item-content-rejJg')
             result = []
@@ -69,11 +70,12 @@ class parser:
                     'title':item.title,
                     'price':item.price,
                     'date':item.date,
-                    'url':item.url,
+                    'url':'https://www.avito.ru/' + str(item.url),
                 }
                 result.append(payload)
-            time.sleep(10)
+            time.sleep(6)
 
+        print(result)
         return result
 
     def parseblock(self,block):
@@ -123,13 +125,14 @@ class parser:
         return result(title,price,date,link)
 
 
-# def parse():
-#     p = p.
-#     print(parser().block())
+def parse():
+    p = parser('q')
+    print(p.block())
+
+if __name__ == '__main__':
+    parse()
+
+# p = parser(query='iPhone X')
 #
-# if __name__ == '__main__':
-#     parse()
+# print(p.block())
 
-p = parser(query='iPhone X')
-
-print(p.block())
